@@ -30,3 +30,18 @@ fs.readFile(path.join(__dirname, 'test_write.txt'), 'utf8', (error,data)=> {  //
 });
 
 console.log('hello'); // This will print first (proabaly) due to async nature of readFile
+
+const fs_new = require('fs').promises
+const fileOps = async() => {
+    try {
+        const lines = await fs_new.readFile(path.join(__dirname, 'updated_test_file.txt'), 'utf8');
+        await fs_new.writeFile(path.join(__dirname, 'promise_write.txt') , lines);
+        await fs_new.appendFile(path.join(__dirname, 'promise_write.txt'), '\n\n New line appended yeah!');
+        await fs_new.rename(path.join(__dirname, 'promise_write.txt'), path.join(__dirname, 'completed_file.txt'));
+        await fs_new.unlink(path.join(__dirname, 'updated_test_file.txt')); // Delete the file
+    } catch(error) {
+        console.error(error);
+    }
+} 
+
+fileOps();
