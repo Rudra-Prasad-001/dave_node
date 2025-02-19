@@ -51,3 +51,9 @@ fileOps();
 const {format} = require('date-fns');
 
 console.log(format(new Date(), "dd-MM-yyyy hh-mm-ss a"));
+
+//import uuid library
+
+const {v4: uuid} = require('uuid');
+
+console.log(uuid());
