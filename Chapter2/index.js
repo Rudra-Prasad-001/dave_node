@@ -45,3 +45,9 @@ const fileOps = async() => {
 } 
 
 fileOps();
+
+//import date-fns
+
+const {format} = require('date-fns');
+
+console.log(format(new Date(), "dd-MM-yyyy hh-mm-ss a"));
