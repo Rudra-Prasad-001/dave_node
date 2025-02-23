@@ -1,0 +1,19 @@
+{
+  "name": "chapter3",
+  "version": "1.0.0",
+  "description": "log events (emmiter and response)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Rudra Prasad",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
