@@ -1,0 +1,1 @@
+01/03/2025	19:22:49	9ffaccd9-94aa-4d5a-a07f-06a100f35ee3	TypeError:fsPromises.readFil is not a function
