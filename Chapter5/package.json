@@ -1,0 +1,22 @@
+{
+  "name": "chapter5",
+  "version": "1.0.0",
+  "description": "Web server using express",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "Express.js",
+    "Node.js"
+  ],
+  "author": "Rudra Prasad",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
