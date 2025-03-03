@@ -1,9 +1,50 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
+const originOption = require('./middleware/cors');
+const {logEvent} = require('./middleware/logEvent');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-const PORT = 3500 || process.env.PORT ;
+
+const PORT = process.env.PORT || 3500;
+
+//middleware (something that is in between req and res)
+
+//builtin middleware
+//serve all the static files like image, css ,txt which are in the public folder
+app.use(express.static('public'));
+
+app.use(express.urlencoded({extended : false}));
+
+app.use(express.json());
+
+//Custom middleware (user defined)
+
+// app.use('/',(req,res,next)=> {
+//     console.log('hey ya');
+//     next();
+// });
+
+app.use(logEvent);
+
+app.get('/test-error', (req,res,next)=> {
+    const error = new Error('Intentional error')
+    next(error);
+})
+
+
+//Third party middleware
+
+//use cors for all routes
+// app.use(cors());
+
+//allow only whitelist domains to access your data
+
+
+app.use(cors(originOption));
+
 
 app.get('^/$|index(.html)?', (req,res)=> {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
@@ -18,9 +59,9 @@ app.get('/new-page(.html)?', (req,res)=> {
     res.sendFile(path.join(__dirname, 'views', 'new-page.html'));
 });
 
-app.get('/image/img1.jpg', (req,res)=> {
-    res.sendFile(path.join(__dirname, 'image', 'img1.jpg'));
-});
+// app.get('/image/img1.jpg', (req,res)=> {
+//     res.sendFile(path.join(__dirname, 'image', 'img1.jpg'));
+// });
 
 // app.get('^/*', (req,res,next) => {
 //     console.log('hey');
@@ -58,9 +99,19 @@ app.get('/subdir/test(.html)?', (req,res)=> {
     res.sendFile(path.join(__dirname, 'views', 'subdir', 'test.html'));
 });
 
-app.get('/*', (req,res)=> {
+// app.get('/*', (req,res)=> {
+//     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+// });
+
+//app.all() supports regex while app.use() does not
+
+app.all('*', (req,res)=> {
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});
+})
+
+//always use error handlers at the end
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server is listining on ${PORT}`);
