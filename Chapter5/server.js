@@ -5,6 +5,7 @@ const originOption = require('./middleware/cors');
 const {logEvent} = require('./middleware/logEvent');
 const errorHandler = require('./middleware/errorHandler');
 
+
 const app = express();
 
 
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 3500;
 //builtin middleware
 //serve all the static files like image, css ,txt which are in the public folder
 app.use(express.static('public'));
+app.use('/subdir', express.static('public'));
 
 app.use(express.urlencoded({extended : false}));
 
@@ -45,19 +47,12 @@ app.get('/test-error', (req,res,next)=> {
 
 app.use(cors(originOption));
 
+app.use('/', require('./Routes/root'));
+app.use('/subdir',require('./Routes/subdir'));
+app.use('/employees(.js)?', require('./Routes/api/employees'));
 
-app.get('^/$|index(.html)?', (req,res)=> {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
 
-app.get('/old-page(.html)?', (req,res)=> {
-    res.redirect(301,path.join(__dirname, 'views', 'new-page.html'));
-});
 
-app.get('/new-page(.html)?', (req,res)=> {
-    // res.sendFile('./views/new-page.html', {root: __dirname});   //not suitable but works
-    res.sendFile(path.join(__dirname, 'views', 'new-page.html'));
-});
 
 // app.get('/image/img1.jpg', (req,res)=> {
 //     res.sendFile(path.join(__dirname, 'image', 'img1.jpg'));
@@ -91,13 +86,6 @@ app.get('/new-page(.html)?', (req,res)=> {
 
 // app.get('/fall', [two,one,two,three,one]);
 
-app.get('/subdir/index(.html)?', (req,res)=> {
-    res.sendFile(path.join(__dirname, 'views', 'subdir', 'index.html'));
-});
-
-app.get('/subdir/test(.html)?', (req,res)=> {
-    res.sendFile(path.join(__dirname, 'views', 'subdir', 'test.html'));
-});
 
 // app.get('/*', (req,res)=> {
 //     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
