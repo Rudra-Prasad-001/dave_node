@@ -1,9 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const originOption = require('./middleware/cors');
 const {logEvent} = require('./middleware/logEvent');
 const errorHandler = require('./middleware/errorHandler');
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbConn');
 const {jwtVerify} = require('./middleware/jwtVerify');
 const cookieParser = require('cookie-parser');
 
@@ -12,6 +15,8 @@ const app = express();
 
 
 const PORT = process.env.PORT || 3500;
+
+connectDB();
 
 //middleware (something that is in between req and res)
 
@@ -112,6 +117,10 @@ app.all('*', (req,res)=> {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-    console.log(`Server is listining on ${PORT}`);
+mongoose.connection.once('open', () => {
+    console.log('MongoDb successfuly connected');
+    app.listen(PORT, () => {
+        console.log(`Server is listining on ${PORT}`);
+    })
 })
+

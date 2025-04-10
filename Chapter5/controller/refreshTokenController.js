@@ -3,7 +3,7 @@ const userDB = {
     users: require('../model/users.json'),
     setUsers: function (data) {this.users = data}
 };
-require('dotenv').config();
+
 
 const refreshTokenHandle = (req,res) => {
     const cookies = req.cookies;
