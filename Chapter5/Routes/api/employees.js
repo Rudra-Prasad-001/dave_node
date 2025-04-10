@@ -1,39 +1,17 @@
 const express = require('express');
-const path = require('path');
 const router = express.Router();
+const controller = require('../../controller/viewCotroller');
+const ROLES_LIST = require('../../config/rolesList');
+const verifyRoles = require('../../middleware/verifyRoles');
 
-const data = {};
-// assigning employee(key) to data (object)
-
-data.employees = require(path.join(__dirname, '..', '..', 'data', 'employees.json'));
 
 router.route('/')
-    .get((req,res)=> {
-        res.json(data.employees);
-    })
-    .post((req,res)=> {   //add or create
-        res.json({
-            "firstname": req.body.firstname,
-            "lastname": req.body.lastname
-        });
-    })
-    .put((req,res)=> {       //modify data
-        res.json({
-            "firstname": req.body.firstname,
-            "lstname": req.body.lastname
-        });
-    })
-    .delete((req,res)=> {
-        res.json({
-            "id": req.body.id
-        });
-    });
+    .get(controller.getEmployees)
+    .post(verifyRoles(ROLES_LIST.Admin,ROLES_LIST.Editor), controller.addEmployee)
+    .put(verifyRoles(ROLES_LIST.Admin,ROLES_LIST.Editor), controller.updateEmployee)
+    .delete(verifyRoles(ROLES_LIST.Admin), controller.deleteEmployee);
 
 router.route('/:id')
-    .get((req,res)=> {
-        res.json({
-            "id" : req.params.id
-        });
-    });
+    .get(controller.getEmployeeById);
     
 module.exports = router;

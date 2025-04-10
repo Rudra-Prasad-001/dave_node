@@ -4,6 +4,8 @@ const cors = require('cors');
 const originOption = require('./middleware/cors');
 const {logEvent} = require('./middleware/logEvent');
 const errorHandler = require('./middleware/errorHandler');
+const {jwtVerify} = require('./middleware/jwtVerify');
+const cookieParser = require('cookie-parser');
 
 
 const app = express();
@@ -17,10 +19,13 @@ const PORT = process.env.PORT || 3500;
 //serve all the static files like image, css ,txt which are in the public folder
 app.use(express.static('public'));
 app.use('/subdir', express.static('public'));
-
+//use to handel form data
 app.use(express.urlencoded({extended : false}));
 
 app.use(express.json());
+
+//use to parse cookie data
+app.use(cookieParser());
 
 //Custom middleware (user defined)
 
@@ -49,7 +54,14 @@ app.use(cors(originOption));
 
 app.use('/', require('./Routes/root'));
 app.use('/subdir',require('./Routes/subdir'));
+app.use('/register',require('./Routes/userRegister'));
+app.use('/auth',require('./Routes/userAuth'));
+app.use('/refresh',require('./Routes/refreshToken'));
+app.use('/logout',require('./Routes/logout'));
+
+app.use(jwtVerify);
 app.use('/employees(.js)?', require('./Routes/api/employees'));
+
 
 
 
@@ -91,7 +103,6 @@ app.use('/employees(.js)?', require('./Routes/api/employees'));
 //     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 // });
 
-//app.all() supports regex while app.use() does not
 
 app.all('*', (req,res)=> {
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));

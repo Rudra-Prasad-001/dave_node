@@ -7,3 +7,8 @@
 07/03/2025	12:18:36	d3a47028-8238-455f-afe7-85c9800126d4	Error:ENOENT: no such file or directory, stat '/home/legend/dave_node/Chapter5/Routes/new-page.html'
 07/03/2025	12:19:49	58bb712f-d50f-44d5-8f04-c8715c0eecb6	Error:ENOENT: no such file or directory, stat '/home/legend/dave_node/Chapter5/new-page.html'
 07/03/2025	12:19:50	43dcc3c2-2c86-444a-a1f2-bdbbc375e21c	Error:ENOENT: no such file or directory, stat '/home/legend/dave_node/Chapter5/new-page.html'
+10/03/2025	16:48:58	8c147a49-8a0c-4d82-804a-c11ecd7d858c	SyntaxError:Unexpected token } in JSON at position 13
+02/04/2025	17:52:39	4673955d-9a29-4b68-a1ec-5150aa4ada34	TypeError:Cannot read properties of undefined (reading 'split')
+11/04/2025	02:18:35	78b4f75b-88b0-4e9f-a175-af8d8d40fab1	TypeError:Cannot read properties of undefined (reading 'split')
+11/04/2025	02:20:32	66b7d410-d46e-4122-9b63-7ad56233e838	TypeError:Cannot read properties of undefined (reading 'split')
+11/04/2025	02:21:15	f097f3ad-23be-4093-9064-f4b54405c9f6	SyntaxError:Unexpected string in JSON at position 60
