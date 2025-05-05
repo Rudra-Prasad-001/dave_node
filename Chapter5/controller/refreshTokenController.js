@@ -1,16 +1,13 @@
 const jwt = require('jsonwebtoken');
-const userDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) {this.users = data}
-};
+const {User} = require('../model/User');
 
 
-const refreshTokenHandle = (req,res) => {
+const refreshTokenHandle = async (req,res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(401);
     const refreshToken = cookies.jwt;
     if(!refreshToken) return res.sendStatus(401);
-    const verifiedUser = userDB.users.find(person => person.refreshToken === refreshToken);
+    const verifiedUser = await User.findOne({refreshToken: refreshToken}).exec();
     const roles = Object.values(verifiedUser.roles)
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err,decoded)=> {
         if(err || verifiedUser.username !== decoded.username) return res.sendStatus(403);

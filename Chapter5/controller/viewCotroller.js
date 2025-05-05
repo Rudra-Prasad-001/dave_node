@@ -1,65 +1,45 @@
-const path = require('path');
-const data = {
-    employees: require(path.join(__dirname, '..', 'model', 'employees.json')),
-    setEmployees :  (newData) => {
-        data.employees = newData
-    }
-};
-const fsPromise = require('fs').promises;
-
-const getEmployees = (req,res) => {
-    res.json(data.employees);
-}
-
+const { nextDay } = require('date-fns/nextDay');
+const {Employee} = require('../model/Employee');
 const addEmployee = async (req,res) => {
-    const newEmployee = {
-        id: data.employees?.length?data.employees[data.employees.length-1].id+1 : 1,
-        "firstname": req.body.firstname,
-        "lastname": req.body.lastname
-    };
     if(!req.body.firstname && !req.body.lastname) {
         res.status(400).send(`please give a valid firstname:${req.body.firstname} and lastname:${req.body.lastname}`);
     }else {
-        data.setEmployees([...data.employees, newEmployee]);
-        await fsPromise.writeFile(path.join(__dirname,'..','model','employees.json'), JSON.stringify(data.employees))
-        res.json(data.employees);
+        const result = await Employee.create({
+            "firstname": req.body.firstname,
+            "lastname": req.body.lastname
+        });
     }
 }
 
  //modify data
 const updateEmployee = async (req,res)=> {   
-    if((parseInt(req.body.id) > data.employees.length-1) || (parseInt(req.body.id) <= 0)) {
-        res.end(`Your given id:${req.body.id} does not exist`);
-    }else {
-        const employee = data.employees.find(emp => emp.id === parseInt(req.body.id));
-        if(req.body.firstname) employee.firstname = req.body.firstname;
-        if(req.body.lastname) employee.lastname = req.body.lastname;
-        const filteredArray = data.employees.filter(emp => emp.id !== parseInt(req.body.id));
-        data.setEmployees([...filteredArray, employee]);
-        data.employees.sort((a,b)=> parseInt(a.id)-parseInt(b.id));
-        await fsPromise.writeFile(path.join(__dirname,'..','model','employees.json'), JSON.stringify(data.employees))
-        res.json(data.employees);
-    }
+
+    const employee = await Employee.findById(req.body.id);
+    if(req.body.firstname) employee.firstname = req.body.firstname;
+    if(req.body.lastname) employee.lastname = req.body.lastname;
+
 }
 
-const deleteEmployee = async (req,res)=> {
-    if(parseInt(req.body.id) > data.employees.length) {
-        res.status(400).send(`id:${req.body.id} is not found`);
-    } else {
-        const filteredArray =  data.employees.filter(emp => emp.id !== parseInt(req.body.id));
-        data.setEmployees([...filteredArray]);
-        await fsPromise.writeFile(path.join(__dirname,'..','model','employees.json'), JSON.stringify(data.employees))
-        res.json(data.employees);
+const deleteEmployee = async (req,res,next)=> {
+    try{
+        const deletedEmployee = await Employee.findByIdAndDelete(req.body.id);
+        if(!deletedEmployee) res.status(404).json({msg:`Emplyoyee id:${req.body.id} not found`});
+        res.status(200).json({msg:`Emplyoyee id:${req.body.id} deleted successfully`})
+    } catch(err) {
+        next(err);
     }
+   
 }
 
-const getEmployeeById = (req,res)=> {
-    if((parseInt(req.params.id) > data.employees.length) || (parseInt(req.body.id <= 0))) {
-        res.status(400).send(`id:${req.params.id} not found`);
-    } else {
-        const employee = data.employees.find(emp => emp.id === parseInt(req.params.id));
-        res.json(employee);
-    }   
+const getEmployeeById = async (req,res)=> {
+
+    try {
+        const employee = await Employee.findById(req.params.id);
+        if(employee) res.status(200).json(employee);
+    } catch(err) {
+        next(err)
+    }
+
 }
 
 module.exports = {getEmployees, addEmployee, updateEmployee, deleteEmployee, getEmployeeById};

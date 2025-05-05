@@ -1,18 +1,11 @@
-const path = require('path');
+
 const bcrypt = require('bcrypt');
-const fsPromise = require('fs').promises;
 const jwt = require('jsonwebtoken');
-const userDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) {this.users = data}
-};
-
-
-
+const {User} = require('../model/User');
 
 const userLogin = async (req,res) => {
     const {username,pwd} = req.body;
-    const verifiedUser = userDB.users.find(person => person.username === username);
+    const verifiedUser = await User.findOne({username: username});
     if(verifiedUser) {
         //match password
         const verifiedPwd = verifiedUser.password;
@@ -31,11 +24,8 @@ const userLogin = async (req,res) => {
                 process.env.ACCESS_TOKEN_SECRET,{expiresIn: '60s'});
             const refreshToken = jwt.sign({username: verifiedUser.username},process.env.REFRESH_TOKEN_SECRET,{expiresIn:'1d'});
             //Save the Refresh Token in the Users DB
-            const otherUsers = userDB.users.filter((person)=> person.username !== verifiedUser.username);
-            const currentUser = {...verifiedUser, refreshToken};
-            userDB.setUsers([...otherUsers,currentUser])
-            fsPromise.writeFile(path.join(__dirname,'..','model','users.json'),JSON.stringify(userDB.users));
-
+            verifiedUser.refreshToken = refreshToken;
+            await verifiedUser.save();
             res.cookie('jwt', refreshToken, {httpOnly:true,maxAge: 24*60*60*1000});
             res.status(200).json({accessToken});
         } else {

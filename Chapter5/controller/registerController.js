@@ -1,11 +1,7 @@
-const path = require('path');
-const fsPromise = require('fs').promises;
+
+const {User} = require('../model/User');
 const bcrypt = require('bcrypt');
 
-const userDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) {this.users = data}
-};
 
 const handelNewUser = async (req,res) => {
     const {username, pwd} = req.body;
@@ -13,7 +9,7 @@ const handelNewUser = async (req,res) => {
         res.status(400).json({message: `Can't create the user Please check username:${username}
         password:${pwd}`});
     }else {
-       const duplicate = userDB.users.find(person => person.username === username);
+       const duplicate = await User.findOne({username: username}).exec();
 
        if(duplicate){
         //conflict
@@ -22,15 +18,13 @@ const handelNewUser = async (req,res) => {
         try{
             //10 is default standard salt
             const hasedPwd = await bcrypt.hash(pwd,10);
-            const newUser = {
+            const result = await User.create({
              'username': username,
-             'roles': req.body.roles,
              'password': hasedPwd
-            }
-            userDB.setUsers([...userDB.users, newUser]);
-            await fsPromise.writeFile(path.join(__dirname,'..','model', 'users.json'), JSON.stringify(userDB.users,null,2));
+            })
+
             res.status(201).json({user: `${username} created`});
-            console.log(newUser);
+            console.log(result);
     
            } catch(err) {
              res.status(500).json({message:`${err.message}`});

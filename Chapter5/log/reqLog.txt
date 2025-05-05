@@ -287,3 +287,14 @@
 11/04/2025	02:40:58	f106a78b-d8e4-4a7e-9f30-2502feb967c9	/employees	undefined	DELETE
 11/04/2025	02:41:14	1f5e564c-58a4-49a6-ad02-70543e67e737	/auth	undefined	POST
 11/04/2025	02:41:32	27c77796-847d-4a17-a607-e34f50c2fbc9	/employees	undefined	DELETE
+05/05/2025	16:57:40	9a7c5302-36c8-4e5f-9dcb-4fb2604d0875	/register	undefined	POST
+05/05/2025	16:57:56	efd1a6fc-ed14-40c9-acaa-7975157f6e4b	/register	undefined	POST
+05/05/2025	16:58:06	31f7012d-d69b-410e-92ca-811b5ae92ec2	/register	undefined	POST
+05/05/2025	17:02:58	f3d1e83f-5289-43d8-b2b8-a2341bf95360	/register	undefined	POST
+05/05/2025	17:03:10	62d663ac-28ed-4761-b7a8-b932b7874b6b	/register	undefined	POST
+05/05/2025	17:03:23	7c1be955-b9dd-44bd-a5df-54eccfb89cf3	/register	undefined	POST
+05/05/2025	17:26:03	03394c0e-a5fd-4d9c-b66b-e7f0fc3560e5	/register	undefined	POST
+05/05/2025	17:26:09	f4d901fa-daa3-41d5-bca4-84f5f159a399	/register	undefined	POST
+05/05/2025	17:26:10	223ae10b-5ab2-4551-b683-c7476f7cd311	/register	undefined	POST
+05/05/2025	17:28:44	378cc992-3348-4239-a976-7d363336ff15	/register	undefined	POST
+05/05/2025	17:28:54	6d960af8-026b-4fc4-a79b-07f176c5c59f	/register	undefined	POST
